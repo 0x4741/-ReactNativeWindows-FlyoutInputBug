@@ -18,7 +18,7 @@ import {
   useColorScheme,
   View,
 } from 'react-native';
-import {Flyout} from 'react-native-windows';
+import {Flyout, Popup} from 'react-native-windows';
 
 import {
   Colors,
@@ -60,13 +60,9 @@ function Section({children, title}: SectionProps): React.JSX.Element {
 }
 
 function App(): React.JSX.Element {
-  const isDarkMode = useColorScheme() === 'dark';
-  const [isOpen, setFlyout] = useState(false);
-
-  const backgroundStyle = {
-    backgroundColor: isDarkMode ? Colors.darker : Colors.lighter,
-    flex: 1,
-  };
+  const [flyoutOpen, setFlyout] = useState(false);
+  const [flyoutViewOpen, setFlyoutView] = useState(false);
+  const [popupOpen, setPopup] = useState(false);
 
   return (
     <View
@@ -74,37 +70,70 @@ function App(): React.JSX.Element {
         flex: 1,
       }}>
       <Flyout
-        isLightDismissEnabled={false}
-        isOpen={isOpen}
+        isOpen={flyoutOpen}
         onDismiss={() => {
           setFlyout(false);
         }}>
-        <View
-          style={[
-            backgroundStyle,
-            {
-              backgroundColor: 'gray',
-            },
-          ]}>
+        <TextInput
+          style={{
+            flex: 1,
+            width: '80%',
+          }}
+          autoFocus
+          value="Flyout"
+        />
+      </Flyout>
+      <Flyout
+        isOpen={flyoutViewOpen}
+        onDismiss={() => {
+          setFlyoutView(false);
+        }}>
+        <View>
           <TextInput
             style={{
               flex: 1,
               width: '80%',
             }}
             autoFocus
-            value="This textinput"
+            value="Flyout"
           />
         </View>
       </Flyout>
+      <Popup
+        isOpen={popupOpen}
+        onDismiss={() => {
+          setPopup(false);
+        }}>
+        <TextInput
+          style={{
+            flex: 1,
+            width: '80%',
+          }}
+          autoFocus
+          value="Popup"
+        />
+      </Popup>
       <View
         style={{
           flex: 1,
-          justifyContent: 'flex-end',
+          alignSelf: 'flex-end',
         }}>
         <Button
           title="Toggle flyout"
           onPress={() => {
             setFlyout(x => !x);
+          }}
+        />
+        <Button
+          title="Toggle flyout with view"
+          onPress={() => {
+            setFlyoutView(x => !x);
+          }}
+        />
+        <Button
+          title="Toggle popup"
+          onPress={() => {
+            setPopup(x => !x);
           }}
         />
       </View>
