@@ -5,17 +5,20 @@
  * @format
  */
 
-import React from 'react';
+import React, {useState} from 'react';
 import type {PropsWithChildren} from 'react';
 import {
+  Button,
   SafeAreaView,
   ScrollView,
   StatusBar,
   StyleSheet,
   Text,
+  TextInput,
   useColorScheme,
   View,
 } from 'react-native';
+import {Flyout} from 'react-native-windows';
 
 import {
   Colors,
@@ -24,6 +27,7 @@ import {
   LearnMoreLinks,
   ReloadInstructions,
 } from 'react-native/Libraries/NewAppScreen';
+import {fileMapCacheDirectory} from './metro.config';
 
 type SectionProps = PropsWithChildren<{
   title: string;
@@ -57,42 +61,54 @@ function Section({children, title}: SectionProps): React.JSX.Element {
 
 function App(): React.JSX.Element {
   const isDarkMode = useColorScheme() === 'dark';
+  const [isOpen, setFlyout] = useState(false);
 
   const backgroundStyle = {
     backgroundColor: isDarkMode ? Colors.darker : Colors.lighter,
+    flex: 1,
   };
 
   return (
-    <SafeAreaView style={backgroundStyle}>
-      <StatusBar
-        barStyle={isDarkMode ? 'light-content' : 'dark-content'}
-        backgroundColor={backgroundStyle.backgroundColor}
-      />
-      <ScrollView
-        contentInsetAdjustmentBehavior="automatic"
-        style={backgroundStyle}>
-        <Header />
+    <View
+      style={{
+        flex: 1,
+      }}>
+      <Flyout
+        isLightDismissEnabled={false}
+        isOpen={isOpen}
+        onDismiss={() => {
+          setFlyout(false);
+        }}>
         <View
-          style={{
-            backgroundColor: isDarkMode ? Colors.black : Colors.white,
-          }}>
-          <Section title="Step One">
-            Edit <Text style={styles.highlight}>App.tsx</Text> to change this
-            screen and then come back to see your edits.
-          </Section>
-          <Section title="See Your Changes">
-            <ReloadInstructions />
-          </Section>
-          <Section title="Debug">
-            <DebugInstructions />
-          </Section>
-          <Section title="Learn More">
-            Read the docs to discover what to do next:
-          </Section>
-          <LearnMoreLinks />
+          style={[
+            backgroundStyle,
+            {
+              backgroundColor: 'gray',
+            },
+          ]}>
+          <TextInput
+            style={{
+              flex: 1,
+              width: '80%',
+            }}
+            autoFocus
+            value="This textinput"
+          />
         </View>
-      </ScrollView>
-    </SafeAreaView>
+      </Flyout>
+      <View
+        style={{
+          flex: 1,
+          justifyContent: 'flex-end',
+        }}>
+        <Button
+          title="Toggle flyout"
+          onPress={() => {
+            setFlyout(x => !x);
+          }}
+        />
+      </View>
+    </View>
   );
 }
 
